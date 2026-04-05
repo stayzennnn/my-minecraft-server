@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+
+      - name: Lint minecraft chart
+        run: helm lint charts/minecraft
+
+      - name: Lint exporter chart
+        run: helm lint charts/exporter
+
+      - name: Lint monitoring chart
+        run: helm lint charts/monitoring
+
+      - name: Template minecraft chart
+        run: helm template minecraft charts/minecraft
+
+      - name: Template exporter chart
+        run: helm template exporter charts/exporter
