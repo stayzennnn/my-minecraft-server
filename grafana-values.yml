@@ -1,9 +1,0 @@
-datasources:
-  datasources.yaml:
-    apiVersion: 1
-    datasources:
-    - name: Prometheus-MS
-      type: prometheus
-      url: http://prometheus-server.monitoring.svc.cluster.local:80
-      access: proxy
-      isDefault: true
