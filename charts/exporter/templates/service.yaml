@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraft-exporter
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: minecraft-exporter
+spec:
+  selector:
+    app: minecraft-exporter
+  ports:
+  - name: metrics
+    port: {{ .Values.service.port }}
+    targetPort: {{ .Values.service.port }}

@@ -1,0 +1,19 @@
+server:
+  persistentVolume:
+    enabled: false
+
+alertmanager:
+  persistence:
+    enabled: false
+
+serverFiles:
+  prometheus.yml:
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets:
+            - localhost:9090
+      - job_name: minecraft
+        static_configs:
+          - targets:
+            - minecraft-exporter.default.svc.cluster.local:9150

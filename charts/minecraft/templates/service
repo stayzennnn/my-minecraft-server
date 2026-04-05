@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraft-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: minecraft-service
+spec:
+  selector:
+    app: minecraft-deployment
+  type: NodePort
+  ports:
+    - port: 25565
+      targetPort: 25565
+      protocol: TCP
+      name: minecraft
+      nodePort: {{ .Values.service.nodePort }}
+    - port: {{ .Values.rcon.port }}
+      targetPort: {{ .Values.rcon.port }}
+      protocol: TCP
+      name: rcon

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft-deployment
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: minecraft-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft-deployment
+  template:
+    metadata:
+      labels:
+        app: minecraft-deployment
+    spec:
+      containers:
+      - name: minecraft-deployment
+        image: {{ .Values.server.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 25565
+          hostPort: 25565
+          name: minecraft
+        - containerPort: {{ .Values.rcon.port }}
+          name: rcon
+        env:
+        - name: EULA
+          value: "TRUE"
+        - name: MEMORY
+          value: {{ .Values.server.memory | quote }}
+        - name: TYPE
+          value: {{ .Values.server.type | quote }}
+        - name: VERSION
+          value: {{ .Values.server.version | quote }}
+        - name: MODE
+          value: {{ .Values.server.mode | quote }}
+        - name: ONLINE_MODE
+          value: {{ .Values.server.onlineMode | quote }}
+        - name: ENABLE_RCON
+          value: "true"
+        - name: RCON_PORT
+          value: {{ .Values.rcon.port | quote }}
+        - name: RCON_PASSWORD
+          value: {{ .Values.rcon.password | quote }}
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minecraft-data-pvc

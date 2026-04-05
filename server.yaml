@@ -1,0 +1,87 @@
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: minecraft-data-pvc
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft-deployment
+  labels:
+    app: minecraft-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft-deployment
+  template:
+    metadata:
+      labels:
+        app: minecraft-deployment
+    spec:
+      containers:
+      - name: minecraft-deployment
+        image: itzg/minecraft-server:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 25565
+          hostPort: 25565
+          name: minecraft
+        - containerPort: 25575       # ADD THIS
+          name: rcon
+        env:
+        - name: EULA
+          value: "TRUE"
+        - name: MEMORY
+          value: "1G"
+        - name: TYPE
+          value: "PAPER"
+        - name: VERSION
+          value: "1.21.11"
+        - name: MODE
+          value: "survival"
+        - name: ONLINE_MODE
+          value: "FALSE"
+        - name: ENABLE_RCON          # ADD THESE THREE
+          value: "true"
+        - name: RCON_PORT
+          value: "25575"
+        - name: RCON_PASSWORD
+          value: "supersecretpassword"   # change this!
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minecraft-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraft-service
+  labels:
+    app: minecraft-service
+spec:
+  selector:
+    app: minecraft-deployment
+  ports:
+    - port: 25565
+      targetPort: 25565
+      protocol: TCP
+      name: minecraft
+      nodePort: 30565
+    - port: 25575        
+      targetPort: 25575
+      protocol: TCP
+      name: rcon
+  type: NodePort
+    

@@ -1,0 +1,14 @@
+apiVersion: v2
+name: my-minecraft-server
+description: Minecraft server with monitoring
+version: 0.1.0
+dependencies:
+  - name: minecraft
+    version: "0.1.0"
+    repository: "file://charts/minecraft"
+  - name: exporter
+    version: "0.1.0"
+    repository: "file://charts/exporter"
+  - name: monitoring
+    version: "0.1.0"
+    repository: "file://charts/monitoring"

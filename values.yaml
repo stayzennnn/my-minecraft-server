@@ -1,0 +1,22 @@
+minecraft:
+  rcon:
+    password: "supersecretpassword"
+  server:
+    version: "1.21.11"
+    mode: "survival"
+    memory: "1G"
+
+exporter:
+  rcon:
+    password: "supersecretpassword"
+
+monitoring:
+  prometheus:
+    server:
+      persistentVolume:
+        enabled: true
+    alertmanager:
+      persistence:
+        enabled: true
+  grafana:
+    adminPassword: "admin"

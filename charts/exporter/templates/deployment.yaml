@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft-exporter
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft-exporter
+  template:
+    metadata:
+      labels:
+        app: minecraft-exporter
+    spec:
+      containers:
+      - name: minecraft-exporter
+        image: {{ .Values.image }}
+        args:
+          - --mc.rcon-address={{ .Values.rcon.address }}
+          - --mc.rcon-password={{ .Values.rcon.password }}
+          - --mc.world={{ .Values.world.path }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+          name: metrics
+        volumeMounts:
+        - name: data
+          mountPath: /data
+          readOnly: true
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.claimName }}

@@ -1,0 +1,14 @@
+image: ghcr.io/dirien/minecraft-exporter:latest
+
+rcon:
+  address: "minecraft-service:25575"
+  password: "supersecretpassword"
+
+world:
+  path: "/data/world"
+
+persistence:
+  claimName: minecraft-data-pvc
+
+service:
+  port: 9150

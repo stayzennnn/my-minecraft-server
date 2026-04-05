@@ -1,0 +1,4 @@
+apiVersion: v2
+name: exporter
+description: Minecraft Prometheus exporter
+version: 0.1.0

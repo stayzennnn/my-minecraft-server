@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraft-exporter
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraft-exporter
+  template:
+    metadata:
+      labels:
+        app: minecraft-exporter
+    spec:
+      containers:
+      - name: minecraft-exporter
+        image: ghcr.io/dirien/minecraft-exporter:latest
+        args:
+          - --mc.rcon-address=minecraft-service:25575
+          - --mc.rcon-password=supersecretpassword
+          - --mc.world=/data/world
+        ports:
+        - containerPort: 9150
+          name: metrics
+        volumeMounts:
+        - name: data
+          mountPath: /data
+          readOnly: true
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: minecraft-data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraft-exporter
+  namespace: default
+  labels:
+    app: minecraft-exporter
+spec:
+  selector:
+    app: minecraft-exporter
+  ports:
+  - name: metrics
+    port: 9150
+    targetPort: 9150
