@@ -22,24 +22,23 @@ helm dependency update charts/monitoring
 
 ### 3. Install everything
 
-# Minecraft + exporter in default namespace
-helm upgrade --install minecraft charts/minecraft -n default
-helm upgrade --install exporter charts/exporter -n default
+# Minecraft + exporter
+helm upgrade --install minecraft charts/minecraft
+helm upgrade --install exporter charts/exporter
 
 # Monitoring in monitoring namespace
 helm upgrade --install monitoring charts/monitoring -n monitoring --create-namespace
 
 
 ## Upgrading
-helm upgrade minecraft charts/minecraft -n default
-helm upgrade exporter charts/exporter -n default
+helm upgrade minecraft charts/minecraft
+helm upgrade exporter charts/exporter
 helm upgrade monitoring charts/monitoring -n monitoring
 
 ## Customising
 
 Override any value without editing files:
 
-helm upgrade minecraft charts/minecraft -n default --set rcon.password=mynewpassword
-
+helm upgrade minecraft charts/minecraft --set rcon.password=mynewpassword
 
 Or edit the relevant `values.yaml` and re-run the upgrade command.
